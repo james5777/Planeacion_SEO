@@ -81,7 +81,7 @@ def convertir_columna_fecha(df, col):
         df[col] = pd.to_datetime(df[col], unit="d", origin="1899-12-30", errors="coerce")
     else:
         # Si ya es string o datetime
-        df[col] = pd.to_datetime(df[col], dayfirst=True, errors="coerce")
+        df[col] = pd.to_datetime(df[col],  errors="coerce")
     
     return df
 
