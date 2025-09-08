@@ -72,7 +72,28 @@ for archivo in carpeta.glob("*.xlsx"):
 
 # Concatenamos todos los DataFrames
 df_generalizado = pd.concat(dataframes, ignore_index=True)
-df_generalizado.to_excel("dataframe_completo.xlsx", index=False)
+
+
+# 🔎 Diagnóstico de columnas únicas
+print("\n🔎 Columnas detectadas en df_generalizado:")
+print(sorted(df_generalizado.columns.tolist()))
+
+print("\n📊 Registros totales concatenados:", len(df_generalizado))
+
+# 🔎 Registros por archivo
+print("\n📊 Registros por archivo:")
+print(df_generalizado["Archivo_Origen"].value_counts())
+
+# 🔎 Revisar qué columnas tiene cada archivo
+for archivo, df in df_generalizado.groupby("Archivo_Origen"):
+    print(f"\n📂 Archivo: {archivo}")
+    print("   Columnas:", sorted(df.columns.tolist()))
+    print("   Registros:", len(df))
+
+# Si ya tienes mapeo de partners:
+if "partner" in df_generalizado.columns:
+    print("\n📊 Registros por partner:")
+    print(df_generalizado["partner"].value_counts())
 
 #  Mapeo de Archivo_Origen, para asignar partners
 mapeo_partners = {
@@ -145,5 +166,167 @@ def guardar_en_sqlite(df: pd.DataFrame, nombre_tabla: str, ruta_db: Path, if_exi
         print(f"\n ❌ Error al guardar en SQLite: {e}")
 
 guardar_en_sqlite(df_col_necesarias, name_tabla_general, rutadb)
+
+#---------------------------------------------------------------------------------------------------------------------#
+import pandas as pd
+import sqlite3
+from pathlib import Path
+from openpyxl import load_workbook
+
+# --- Tus rutas de archivo ---
+rutadb = Path("Archivos/Archivos_base_de_datos/Archivo_base_de_datos.db")
+name_tabla_general = "Datos_generales"
+nombre_plantilla = "septiembre.xlsx"
+nombre_salida = "septiembre_lleno.xlsx"
+
+# --- CONEXIÓN Y CONSULTA A LA BD ---
+try:
+    with sqlite3.connect(rutadb) as conn:
+        query = f"""
+        SELECT *
+        FROM "{name_tabla_general}"
+        WHERE STRFTIME('%Y-%m', "Fecha de producción" ") = '2025-09';
+        """
+        df_septiembre = pd.read_sql_query(query, conn)
+    
+    if df_septiembre.empty:
+        print("⚠️ No se encontraron tareas para septiembre. El archivo de salida estará vacío.")
+        exit()
+        
+    print(f"✅ Se encontraron {len(df_septiembre)} tareas para el mes de septiembre.")
+
+except Exception as e:
+    print(f"❌ Error al conectar a la base de datos o leer los datos: {e}")
+    exit()
+
+# --- MAPAS DE CELDAS POR RESPONSABLE ---
+# ⚠️ IMPORTANTE: DEBES COMPLETAR LOS MAPAS DE JUAN MANUEL Y SANTIAGO
+# La plantilla de Manuela ya está completa
+mapa_manuela = {
+    '2025-09-01': 'C4', 
+    '2025-09-02': 'E4', 
+    '2025-09-03': 'G4', 
+    '2025-09-04': 'I4', 
+    '2025-09-05': 'K4',
+    '2025-09-08': 'C16', 
+    '2025-09-09': 'E16', 
+    '2025-09-10': 'G16', 
+    '2025-09-11': 'I16', 
+    '2025-09-12': 'K16',
+    '2025-09-15': 'C29', 
+    '2025-09-16': 'E29', 
+    '2025-09-17': 'G29', 
+    '2025-09-18': 'I29', 
+    '2025-09-19': 'K29',
+    '2025-09-22': 'C41', 
+    '2025-09-23': 'E41', 
+    '2025-09-24': 'G41', 
+    '2025-09-25': 'I41', 
+    '2025-09-26': 'K41',
+    '2025-09-29': 'C55', 
+    '2025-09-30': 'E55',
+}
+
+mapa_juan_manuel = {
+    '2025-09-01': 'C4', 
+    '2025-09-02': 'E4', 
+    '2025-09-03': 'G4', 
+    '2025-09-04': 'I4', 
+    '2025-09-05': 'K4',
+    '2025-09-08': 'C16', 
+    '2025-09-09': 'E16', 
+    '2025-09-10': 'G16', 
+    '2025-09-11': 'I16', 
+    '2025-09-12': 'K16',
+    '2025-09-15': 'C29', 
+    '2025-09-16': 'E29', 
+    '2025-09-17': 'G29', 
+    '2025-09-18': 'I29', 
+    '2025-09-19': 'K29',
+    '2025-09-22': 'C41', 
+    '2025-09-23': 'E41', 
+    '2025-09-24': 'G41', 
+    '2025-09-25': 'I41', 
+    '2025-09-26': 'K41',
+    '2025-09-29': 'C55', 
+    '2025-09-30': 'E55',
+}
+
+mapa_santiago = {
+    '2025-09-01': 'C4', 
+    '2025-09-02': 'E4', 
+    '2025-09-03': 'G4', 
+    '2025-09-04': 'I4', 
+    '2025-09-05': 'K4',
+    '2025-09-08': 'C16', 
+    '2025-09-09': 'E16', 
+    '2025-09-10': 'G16', 
+    '2025-09-11': 'I16', 
+    '2025-09-12': 'K16',
+    '2025-09-15': 'C29', 
+    '2025-09-16': 'E29', 
+    '2025-09-17': 'G29', 
+    '2025-09-18': 'I29', 
+    '2025-09-19': 'K29',
+    '2025-09-22': 'C41', 
+    '2025-09-23': 'E41', 
+    '2025-09-24': 'G41', 
+    '2025-09-25': 'I41', 
+    '2025-09-26': 'K41',
+    '2025-09-29': 'C55', 
+    '2025-09-30': 'E55',
+}
+
+# --- FUNCIÓN PARA LLENAR LA HOJA ---
+def llenar_hoja_calendario(wb, df, nombre_hoja, mapa_celdas):
+    if not mapa_celdas:
+        print(f"⚠️ El mapa de celdas para la hoja '{nombre_hoja}' está vacío. Se omitirá.")
+        return
+        
+    if nombre_hoja not in wb.sheetnames:
+        print(f"❌ Error: La hoja '{nombre_hoja}' no se encuentra en el archivo.")
+        return
+
+    ws = wb[nombre_hoja]
+    
+    for _, row in df.iterrows():
+        fecha = str(row['Fecha de producción'])
+        
+        if fecha in mapa_celdas:
+            celda_destino = mapa_celdas[fecha]
+            contenido_tarea = f"✅ {row['Tema del blog']} - {row['Partner']}"
+            
+            celda_actual = ws[celda_destino]
+            
+            if celda_actual.value:
+                celda_actual.value += f"\n\n{contenido_tarea}"
+            else:
+                celda_actual.value = contenido_tarea
+        else:
+            print(f"⚠️ No se encontró una celda de destino para la fecha {fecha} en la hoja de {ws.title}.")
+
+
+# --- CARGAR LA PLANTILLA Y LLAMAR A LA FUNCIÓN ---
+try:
+    wb = load_workbook(nombre_plantilla)
+
+    # Identifica las hojas de cada responsable
+    df_manuela = df_septiembre[df_septiembre['Responsable de produccion'].str.lower().fillna('').str.contains('manuela')]
+    df_juan_manuel = df_septiembre[df_septiembre['Responsable de produccion'].str.lower().fillna('').str.contains('juan manuel')]
+    df_santiago = df_septiembre[df_septiembre['Responsable de produccion'].str.lower().fillna('').str.contains('santiago')]
+    
+    # Llama a la función para cada responsable
+    llenar_hoja_calendario(wb, df_manuela, 'tareas manuela septiembre', mapa_manuela)
+    llenar_hoja_calendario(wb, df_juan_manuel, 'tareas juan manuel septiembre', mapa_juan_manuel)
+    llenar_hoja_calendario(wb, df_santiago, 'tareas de santiago septiembre', mapa_santiago)
+
+    # --- GUARDAR LOS CAMBIOS ---
+    wb.save(nombre_salida)
+    print(f"\n✅ El calendario se ha llenado y guardado como '{nombre_salida}'.")
+
+except FileNotFoundError:
+    print(f"❌ Error: El archivo de plantilla '{nombre_plantilla}' no se encuentra.")
+except Exception as e:
+    print(f"\n❌ Ocurrió un error al procesar el archivo Excel: {e}")
 
 
