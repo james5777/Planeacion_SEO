@@ -60,15 +60,53 @@ name_column_blog_plataforma = 'Blog/Plataforma'
 
 # Lista para guardar todos los DataFrames
 dataframes = []
+hojas_a_ignorar = ['Contenido futuro', 'Rendimiento contenido']
 
 # Recorremos los archivos Excel de la carpeta
 for archivo in carpeta.glob("*.xlsx"):
     xls = pd.ExcelFile(archivo)
     for hoja in xls.sheet_names:
+        if hoja in hojas_a_ignorar:
+            continue # Si existe una hoja en la lista de hojas, la saltamos y la ignoramos.
+
         df = pd.read_excel(xls, sheet_name=hoja)
+        
+        #Si el archivo es ecuabet, reemplazar los valores que hay en la columna tema, enviandolos a la columna tema del blog
+        if name_archivo_partner_ecuabet in archivo.name and 'Tema' in df.columns:
+            #Si existe "Tema del blog" , sobre escribirlo con los valores de "Tema"
+            df[name_column_tema_blog] = df['Tema']
+            #Eliminamos la columna "Tema"
+            df = df.drop(columns=['Tema'])
+
+        #Eliminar filas que sean NULL o NaN en las columnas 'Blog/Plataforma', 'Tema del blog', 'Fecha de produccion, 'Responsable de produccion', 'Tiempo estimado produccion', 'Fecha de publicacion', 'Responsable de publicación', 'Tiempo estimado publicacion'
+        columnas_obligatorias = [
+            name_column_blog_plataforma,
+            name_column_tema_blog,
+            name_column_fecha_produccion,
+            name_column_responsable_produccion,
+            name_column_tiempo_estimado_produc,
+            name_column_fecha_publicacion,
+            name_column_responsable_publicacion,
+            name_column_tiempo_estimado_public
+        ]
+
+        # Usar solo las que realmente existen en este DataFrame
+        cols_existentes = [c for c in columnas_obligatorias if c in df.columns]
+
+        # Eliminar filas nulas en esas columnas
+        if cols_existentes:  # solo aplica si hay columnas válidas
+            df = df.dropna(subset=cols_existentes, how="all")
+
+        
+
         df["Archivo_Origen"] = archivo.name
         df["Hoja_Origen"] = hoja
         dataframes.append(df)
+
+        
+
+
+    
 
 # Concatenamos todos los DataFrames
 df_generalizado = pd.concat(dataframes, ignore_index=True)
@@ -185,7 +223,7 @@ try:
         query = f"""
         SELECT *
         FROM "{name_tabla_general}"
-        WHERE STRFTIME('%Y-%m', "Fecha de producción" ") = '2025-09';
+        WHERE STRFTIME('%Y-%m', "Fecha de producción" ) = '2025-09';
         """
         df_septiembre = pd.read_sql_query(query, conn)
     
