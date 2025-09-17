@@ -15,10 +15,14 @@ from openpyxl import load_workbook
 import calendar
 from datetime import date
 from openpyxl.utils import range_boundaries
+from openpyxl.styles import PatternFill
+from openpyxl.styles import Font
+import re
+
 
 ### ---------- Parámetros globales ---------- ###
 año = 2025
-mes = 8  # Cambia aquí el mes que quieras (1-12)
+mes = 4  # Cambia aquí el mes que quieras (1-12)
 
 # Ruta de la carpeta de los excels
 carpeta = Path("Archivos/archivos_origen")
@@ -69,7 +73,7 @@ for archivo in carpeta.glob("*.xlsx"):
             name_column_tiempo_estimado_public
         ]
         cols_existentes = [c for c in columnas_obligatorias if c in df.columns]
-        if cols_existentes:
+        if cols_existentes: 
             df = df.dropna(subset=cols_existentes, how="all")
 
         df["Archivo_Origen"] = archivo.name
@@ -117,6 +121,35 @@ def convertir_columna_fecha(df, col):
 for col in [name_column_fecha_produccion, name_column_fecha_publicacion]:
     df_col_necesarias = convertir_columna_fecha(df_col_necesarias, col)
     df_col_necesarias[col] = pd.to_datetime(df_col_necesarias[col], errors="coerce").dt.date
+
+# ---------- Conversión a minutos ----------
+def convertir_a_minutos(valor):
+    if pd.isna(valor):
+        return 0
+
+    # Normalizar a string para trabajar
+    s = str(valor).strip().lower().replace(",", ".")  # "30,0" -> "30.0"
+
+    # Si es número puro (int o float en string)
+    if re.fullmatch(r"\d+(\.\d+)?", s):
+        return int(float(s))  # 60.0 -> 60
+
+    # Buscar horas (ej: "1 hora", "2h", "1.5 horas")
+    horas_match = re.search(r"(\d+(\.\d+)?)\s*(h|hora|horas)", s)
+    minutos_match = re.search(r"(\d+(\.\d+)?)\s*(m|min|minuto|minutos)", s)
+
+    total = 0
+    if horas_match:
+        total += int(float(horas_match.group(1)) * 60)
+    if minutos_match:
+        total += int(float(minutos_match.group(1)))
+
+    return total
+
+# ---------- Normalizar tus columnas de tiempos ----------
+for col in [name_column_tiempo_estimado_produc, name_column_tiempo_estimado_public]:
+    if col in df_col_necesarias.columns:
+        df_col_necesarias[col] = df_col_necesarias[col].apply(convertir_a_minutos).fillna(0).astype(int)
 
 # Guardar en sqlite
 def guardar_en_sqlite(df: pd.DataFrame, nombre_tabla: str, ruta_db: Path, if_exists: str = "replace") -> None:
@@ -169,22 +202,65 @@ mapa_encabezados = {
     5: {"Lunes": "C72", "Martes": "E72", "Miércoles": "G72", "Jueves": "I72", "Viernes": "K72"},
 }
 
-def llenar_encabezados_calendario(wb, nombre_hoja, año, mes, mapa_encabezados):
+# Definimos el estilo de relleno rojo claro
+fill_rojo = PatternFill(start_color="FD5D5D", end_color="FD5D5D", fill_type="solid")
+
+def llenar_encabezados_calendario(wb, nombre_hoja, año, mes, mapa_encabezados, df, persona_substr):
     if nombre_hoja not in wb.sheetnames:
         return
+
     ws = wb[nombre_hoja]
     dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
     num_dias = calendar.monthrange(año, mes)[1]
     semana = 1
+
     for dia in range(1, num_dias + 1):
         f = date(año, mes, dia)
-        weekday = f.weekday()  # lunes=0
-        if weekday < 5:
+        weekday = f.weekday()
+
+        if weekday < 5:  # solo lunes a viernes
             nombre_dia = dias_semana[weekday]
+
+            # ---- FILTRAR SOLO TAREAS DE ESA PERSONA ----
+            mask_prod = (df[name_column_fecha_produccion] == f) & \
+                        (df[name_column_responsable_produccion].str.lower().str.contains(persona_substr))
+            mask_pub  = (df[name_column_fecha_publicacion] == f) & \
+                        (df[name_column_responsable_publicacion].str.lower().str.contains(persona_substr))
+
+            total_minutos = 0
+            if mask_prod.any():
+                total_minutos += int(df.loc[mask_prod, name_column_tiempo_estimado_produc].sum())
+            if mask_pub.any():
+                total_minutos += int(df.loc[mask_pub, name_column_tiempo_estimado_public].sum())
+
+            # ---- convertir a horas y minutos ----
+            horas, minutos = divmod(total_minutos, 60)
+
+            if horas > 0 and minutos > 0:
+                tiempo_str = f"{horas}h {minutos}m"
+            elif horas > 0:
+                tiempo_str = f"{horas}h"
+            elif minutos > 0:
+                tiempo_str = f"{minutos}m"
+            else:
+                tiempo_str = "0h"
+
+            # ---- escribir en el calendario ----
             if semana in mapa_encabezados and nombre_dia in mapa_encabezados[semana]:
-                ws[mapa_encabezados[semana][nombre_dia]] = f"{nombre_dia} {dia}"
-        if weekday == 6:  # domingo -> siguiente semana
+                celda = ws[mapa_encabezados[semana][nombre_dia]]
+                celda.value = f"{nombre_dia} {dia} ({tiempo_str})"
+
+                # Si pasa de 8 horas, pintamos en rojo
+                if total_minutos > 480:
+                    celda.fill = fill_rojo
+
+        # domingo -> siguiente semana
+        if weekday == 6:
             semana += 1
+
+
+
+
 
 # abrir plantilla
 wb = load_workbook(nombre_plantilla)
@@ -200,9 +276,9 @@ for p in personas:
         print(f"⚠️ No se encontró hoja para '{p}' en la plantilla (buscando substring).")
 
 # Llenar encabezados en las hojas encontradas
-for p, hoja in hojas_persona.items():
-    llenar_encabezados_calendario(wb, hoja, año, mes, mapa_encabezados)
-print(f"✅ Encabezados de {nombre_mes} (en las hojas detectadas) rellenados.")
+for persona_substr, hoja in hojas_persona.items():
+    llenar_encabezados_calendario(wb, hoja, año, mes, mapa_encabezados, df_mes, persona_substr)
+
 
 # Función para calcular semana usando la misma regla de encabezados (aumenta cuando aparece domingo)
 def semana_por_domingos(fecha):
@@ -224,7 +300,20 @@ mapa_tareas = {
     5: {"Lunes": "C74:C88", "Martes": "E74:E88", "Miércoles": "G74:G88", "Jueves": "I74:I88", "Viernes": "K74:K88"},
 }
 
-def escribir_tarea(ws, semana, dia_semana, texto, mapa_tareas):
+partner_fills = {
+    "ACIERTALA": PatternFill(start_color="DADAF2", end_color="DADAF2", fill_type="solid"),  # rojo claro
+    "CAMANBET": PatternFill(start_color="F3FFEA", end_color="F3FFEA", fill_type="solid"),      # azul claro
+    "DORADOBET CR": PatternFill(start_color="F2E2E2", end_color="F2E2E2", fill_type="solid"),     # verde claro#A8E6FA
+    "DORADOBET GT": PatternFill(start_color="F2E2E2", end_color="F2E2E2", fill_type="solid"),     # morado claro#EED247
+    "DORADOBET PE": PatternFill(start_color="F2E2E2", end_color="F2E2E2", fill_type="solid"),     # morado claro
+    "DORADOBET SV": PatternFill(start_color="F2E2E2", end_color="F2E2E2", fill_type="solid"),     # morado claro
+    "ECUABET": PatternFill(start_color="F0ECD6", end_color="F0ECD6", fill_type="solid"),     # morado claro
+    "GANAPLAY GT": PatternFill(start_color="ECCFB4", end_color="ECCFB4", fill_type="solid"),     # morado claro
+    "GANAPLAY SV": PatternFill(start_color="ECCFB4", end_color="ECCFB4", fill_type="solid"),     # morado claro
+    "PANIPLAY": PatternFill(start_color="D7CBBE", end_color="D7CBBE", fill_type="solid"),     # morado claro
+}
+
+def escribir_tarea(ws, semana, dia_semana, texto, mapa_tareas, partner):
     if semana not in mapa_tareas or dia_semana not in mapa_tareas[semana]:
         return
     rango = mapa_tareas[semana][dia_semana]
@@ -233,12 +322,13 @@ def escribir_tarea(ws, semana, dia_semana, texto, mapa_tareas):
         cel = ws.cell(row=row, column=min_col)
         if cel.value is None:
             cel.value = texto
+            # Aplicar color según partner
+            partner_key = partner.strip().upper()
+            if partner_key in partner_fills:
+                cel.fill = partner_fills[partner_key]
             return
 
 def llenar_tareas_calendario(wb, nombre_hoja, df, año, mes, mapa_tareas, persona_substr):
-    """Escribe las tareas en la hoja correspondiente a la persona.
-       persona_substr debe ser en minúsculas (ej. 'manuela') y se compara por substring con los campos de responsables.
-    """
     if nombre_hoja not in wb.sheetnames:
         print(f"⚠️ La hoja '{nombre_hoja}' no existe (saltando).")
         return
@@ -246,29 +336,28 @@ def llenar_tareas_calendario(wb, nombre_hoja, df, año, mes, mapa_tareas, person
     dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
 
     for _, row in df.iterrows():
-        # Normalizar responsables como string en minúsculas
         resp_prod = str(row.get(name_column_responsable_produccion, "")).strip().lower()
         resp_pub = str(row.get(name_column_responsable_publicacion, "")).strip().lower()
+        partner = str(row.get(name_column_partner, "")).strip().upper()
 
-        # PRODUCCIÓN: si la persona aparece en el campo responsable de producción
+        # PRODUCCIÓN
         fecha_prod = row.get(name_column_fecha_produccion)
         if pd.notna(fecha_prod) and isinstance(fecha_prod, date) and persona_substr in resp_prod:
             if fecha_prod.month == mes and fecha_prod.year == año:
                 semana = semana_por_domingos(fecha_prod)
                 if semana > 5:
-                    # Si por cualquier razón excede 5, lo colocamos en la última (5)
                     semana = 5
                 weekday = fecha_prod.weekday()
                 if weekday < 5:
                     dia_semana = dias_semana[weekday]
                     texto = (
-                        f"Hacer - {row.get(name_column_blog_plataforma, '')} - {row.get(name_column_partner, '')} - "
+                        f"Hacer - {row.get(name_column_blog_plataforma, '')} - {partner} - "
                         f"{row.get(name_column_tiempo_estimado_produc, '')} \n {row.get(name_column_tema_blog, '')}  \n"
                         f"Responsable hacer: {row.get(name_column_responsable_produccion, '')} \n Responsable publicar: {row.get(name_column_responsable_publicacion, '')}"
                     )
-                    escribir_tarea(ws, semana, dia_semana, texto, mapa_tareas)
+                    escribir_tarea(ws, semana, dia_semana, texto, mapa_tareas, partner)
 
-        # PUBLICACIÓN: si la persona aparece en el campo responsable de publicación
+        # PUBLICACIÓN
         fecha_pub = row.get(name_column_fecha_publicacion)
         if pd.notna(fecha_pub) and isinstance(fecha_pub, date) and persona_substr in resp_pub:
             if fecha_pub.month == mes and fecha_pub.year == año:
@@ -279,11 +368,11 @@ def llenar_tareas_calendario(wb, nombre_hoja, df, año, mes, mapa_tareas, person
                 if weekday < 5:
                     dia_semana = dias_semana[weekday]
                     texto = (
-                        f"Publicar - {row.get(name_column_blog_plataforma, '')} - {row.get(name_column_partner, '')} - "
+                        f"Publicar - {row.get(name_column_blog_plataforma, '')} - {partner} - "
                         f"{row.get(name_column_tiempo_estimado_public, '')} \n {row.get(name_column_tema_blog, '')} \n"
                         f"Responsable hacer: {row.get(name_column_responsable_produccion, '')} \n Responsable publicar: {row.get(name_column_responsable_publicacion, '')}"
                     )
-                    escribir_tarea(ws, semana, dia_semana, texto, mapa_tareas)
+                    escribir_tarea(ws, semana, dia_semana, texto, mapa_tareas, partner)
 
 # Aplicar a todas las hojas/personas detectadas
 for persona_substr, hoja_name in hojas_persona.items():
