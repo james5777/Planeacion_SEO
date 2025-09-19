@@ -5,9 +5,9 @@
 # Fecha: 09/09/2025
 #
 # Descripción: Integración de planeación SEO con base de datos y calendario
-#              -> corregido: coincidencia responsable (contains) y semana
 # ----------------------------------------------------------------------
 
+### ---------- Librerias importadas ---------- ###
 import pandas as pd
 import sqlite3
 from pathlib import Path
@@ -22,9 +22,9 @@ import re
 
 ### ---------- Parámetros globales ---------- ###
 año = 2025
-mes = 4  # Cambia aquí el mes que quieras (1-12)
+mes = 10  # Seleccionar el mes (1-12)
 
-# Ruta de la carpeta de los excels
+# Ruta de la carpeta de los archivos excels a correr
 carpeta = Path("Archivos/archivos_origen")
 
 ### ---------- Ruta de la base de datos ---------- ###
@@ -33,7 +33,7 @@ rutadb = Path("Archivos/Archivos_base_de_datos/Archivo_base_de_datos.db")
 ### ---------- Nombre de la tabla ---------- ###
 name_tabla_general = "Datos_generales"
 
-### ---------- Columnas ---------- ###
+### ---------- Nombres de las Columnas ---------- ###
 name_column_archivo_origen = 'Archivo_Origen'
 name_column_tiempo_estimado_produc = 'Tiempo estimado produccion'
 name_column_tiempo_estimado_public = 'Tiempo estimado publicacion'
@@ -47,8 +47,11 @@ name_column_blog_plataforma = 'Blog/Plataforma'
 
 # ---------- Lectura y normalización de archivos fuente (igual que tenías) ----------
 dataframes = []
+
+### ---------- Hojas que no se van a recorrer ---------- ###
 hojas_a_ignorar = ['Contenido futuro', 'Rendimiento contenido']
 
+### ---------- Bucle que recorre todos los archivos excel y sus hojas ---------- ###
 for archivo in carpeta.glob("*.xlsx"):
     xls = pd.ExcelFile(archivo)
     for hoja in xls.sheet_names:
@@ -62,6 +65,7 @@ for archivo in carpeta.glob("*.xlsx"):
             df[name_column_tema_blog] = df['Tema']
             df = df.drop(columns=['Tema'])
 
+### ---------- Columnas que vamos a utilizar en el dataframe generalizado ---------- ###
         columnas_obligatorias = [
             name_column_blog_plataforma,
             name_column_tema_blog,
@@ -83,7 +87,7 @@ for archivo in carpeta.glob("*.xlsx"):
 df_generalizado = pd.concat(dataframes, ignore_index=True)
 df_generalizado.columns = df_generalizado.columns.str.strip()
 
-# Mapeo de archivos -> partner (igual que tenías)
+### ---------- Mapaeo de nombres de partners en relacion a los archivos ---------- ###
 mapeo_partners = {
     'Planeación contenido blog Aciertala 2025.xlsx': 'Aciertala',
     'Planeación contenido blog CamanBet 2025.xlsx': 'Camanbet',
@@ -96,6 +100,7 @@ mapeo_partners = {
     'Planeación contenido blog GanaPlay SV 2025.xlsx': 'Ganaplay SV',
     'Planeación contenido blog PaniPlay 2025.xlsx': 'Paniplay'
 }
+### ---------- Se agrega una nueva columna con los nombres de los parners ---------- ###
 df_generalizado[name_column_partner] = df_generalizado[name_column_archivo_origen].map(mapeo_partners)
 
 # Filtrar columnas que usaremos
@@ -105,10 +110,12 @@ columnas_necesarias = [
     name_column_tiempo_estimado_produc, name_column_fecha_publicacion,
     name_column_responsable_publicacion, name_column_tiempo_estimado_public
 ]
+
+### ---------- Se crea un dataframe nuevo con la lista de columnas que vamos a utilizar ---------- ###
 df_col_necesarias = df_generalizado[columnas_necesarias].copy()
 df_col_necesarias.columns = df_col_necesarias.columns.str.strip()
 
-# Normalizar fechas: convertimos tanto serial Excel como strings
+### ---------- Normalizacion de fechas, se cambia de Serial de excel a yyyy/mm/dd ---------- ###
 def convertir_columna_fecha(df, col):
     if col not in df.columns:
         return df
@@ -118,11 +125,12 @@ def convertir_columna_fecha(df, col):
         df[col] = pd.to_datetime(df[col], errors="coerce")
     return df
 
+### ---------- Se convierte la columna a tipo date ---------- ###
 for col in [name_column_fecha_produccion, name_column_fecha_publicacion]:
     df_col_necesarias = convertir_columna_fecha(df_col_necesarias, col)
     df_col_necesarias[col] = pd.to_datetime(df_col_necesarias[col], errors="coerce").dt.date
 
-# ---------- Conversión a minutos ----------
+### ---------- Se convierte los minutos escritos de diferentes formas a numero ---------- ###
 def convertir_a_minutos(valor):
     if pd.isna(valor):
         return 0
@@ -146,7 +154,7 @@ def convertir_a_minutos(valor):
 
     return total
 
-# ---------- Normalizar tus columnas de tiempos ----------
+# ----------Se aplica la funcion de "Convertir a minutos" para normalizar columnas de tiempos ----------
 for col in [name_column_tiempo_estimado_produc, name_column_tiempo_estimado_public]:
     if col in df_col_necesarias.columns:
         df_col_necesarias[col] = df_col_necesarias[col].apply(convertir_a_minutos).fillna(0).astype(int)
@@ -162,17 +170,22 @@ def guardar_en_sqlite(df: pd.DataFrame, nombre_tabla: str, ruta_db: Path, if_exi
 
 guardar_en_sqlite(df_col_necesarias, name_tabla_general, rutadb)
 
-# ------------------ Parte del calendario (dinámica por mes/año) ------------------
+# ------------------ Diccionario de mapeo Mes - numero mes ------------------
 meses_es = {
     1: "enero", 2: "febrero", 3: "marzo", 4: "abril",
     5: "mayo", 6: "junio", 7: "julio", 8: "agosto",
     9: "septiembre", 10: "octubre", 11: "noviembre", 12: "diciembre"
 }
+
 nombre_mes = meses_es[mes]
+
+### ---------- Nombre de archivo de plantilla ---------- ###
 nombre_plantilla = f"{nombre_mes}.xlsx"
+
+### ---------- Nombre de archivo de salida ---------- ###
 nombre_salida = f"{nombre_mes}_lleno.xlsx"
 
-# Traer datos del mes desde sqlite
+### ---------- Conexion con SQLite para traer columnas ---------- ###
 mes_str = f"{año}-{mes:02d}"
 with sqlite3.connect(rutadb) as conn:
     query = f"""
@@ -183,7 +196,7 @@ with sqlite3.connect(rutadb) as conn:
     """
     df_mes = pd.read_sql_query(query, conn)
 
-# convertir fechas a date por si acaso (si vienen como strings)
+### ---------- convertir fechas a date por si acaso (si vienen como strings) ---------- ###
 for col in [name_column_fecha_produccion, name_column_fecha_publicacion]:
     if col in df_mes.columns:
         df_mes[col] = pd.to_datetime(df_mes[col], errors="coerce").dt.date
@@ -193,18 +206,20 @@ if df_mes.empty:
 else:
     print(f"✅ Se encontraron {len(df_mes)} tareas para el mes {nombre_mes}.")
 
-# Mapa encabezados (tu estructura)
+### ---------- Diccionario de encabezados para calendario dinamico ---------- ###
 mapa_encabezados = {
     1: {"Lunes": "C2", "Martes": "E2", "Miércoles": "G2", "Jueves": "I2", "Viernes": "K2"},
     2: {"Lunes": "C21", "Martes": "E21", "Miércoles": "G21", "Jueves": "I21", "Viernes": "K21"},
     3: {"Lunes": "C38", "Martes": "E38", "Miércoles": "G38", "Jueves": "I38", "Viernes": "K38"},
     4: {"Lunes": "C55", "Martes": "E55", "Miércoles": "G55", "Jueves": "I55", "Viernes": "K55"},
     5: {"Lunes": "C72", "Martes": "E72", "Miércoles": "G72", "Jueves": "I72", "Viernes": "K72"},
+    6: {"Lunes": "C90", "Martes": "E90", "Miércoles": "G90", "Jueves": "I90", "Viernes": "K90"}
 }
 
-# Definimos el estilo de relleno rojo claro
+### ---------- Se define estilo para color de alerta por carga laboral ---------- ###
 fill_rojo = PatternFill(start_color="FD5D5D", end_color="FD5D5D", fill_type="solid")
 
+### ---------- Función para llenar los encabezados de forma dinamica con la fecha - mes correspondiente ---------- ###
 def llenar_encabezados_calendario(wb, nombre_hoja, año, mes, mapa_encabezados, df, persona_substr):
     if nombre_hoja not in wb.sheetnames:
         return
@@ -258,10 +273,6 @@ def llenar_encabezados_calendario(wb, nombre_hoja, año, mes, mapa_encabezados, 
         if weekday == 6:
             semana += 1
 
-
-
-
-
 # abrir plantilla
 wb = load_workbook(nombre_plantilla)
 
@@ -298,21 +309,24 @@ mapa_tareas = {
     3: {"Lunes": "C39:C53", "Martes": "E39:E53", "Miércoles": "G39:G53", "Jueves": "I39:I53", "Viernes": "K39:K53"},
     4: {"Lunes": "C56:C70", "Martes": "E56:E70", "Miércoles": "G56:G70", "Jueves": "I56:I70", "Viernes": "K56:K70"},
     5: {"Lunes": "C74:C88", "Martes": "E74:E88", "Miércoles": "G74:G88", "Jueves": "I74:I88", "Viernes": "K74:K88"},
+    6: {"Lunes": "C92:C106", "Martes": "E92:E106", "Miércoles": "G92:G106", "Jueves": "I92:I106", "Viernes": "K92:K106"},
 }
-
+### ---------- Colores de fondo para cada tarea en relacion con cada partner ---------- ###
 partner_fills = {
-    "ACIERTALA": PatternFill(start_color="DADAF2", end_color="DADAF2", fill_type="solid"),  # rojo claro
-    "CAMANBET": PatternFill(start_color="F3FFEA", end_color="F3FFEA", fill_type="solid"),      # azul claro
-    "DORADOBET CR": PatternFill(start_color="F2E2E2", end_color="F2E2E2", fill_type="solid"),     # verde claro#A8E6FA
-    "DORADOBET GT": PatternFill(start_color="F2E2E2", end_color="F2E2E2", fill_type="solid"),     # morado claro#EED247
-    "DORADOBET PE": PatternFill(start_color="F2E2E2", end_color="F2E2E2", fill_type="solid"),     # morado claro
-    "DORADOBET SV": PatternFill(start_color="F2E2E2", end_color="F2E2E2", fill_type="solid"),     # morado claro
-    "ECUABET": PatternFill(start_color="F0ECD6", end_color="F0ECD6", fill_type="solid"),     # morado claro
-    "GANAPLAY GT": PatternFill(start_color="ECCFB4", end_color="ECCFB4", fill_type="solid"),     # morado claro
-    "GANAPLAY SV": PatternFill(start_color="ECCFB4", end_color="ECCFB4", fill_type="solid"),     # morado claro
-    "PANIPLAY": PatternFill(start_color="D7CBBE", end_color="D7CBBE", fill_type="solid"),     # morado claro
+    "ACIERTALA": PatternFill(start_color="D0D0F7", end_color="D0D0F7", fill_type="solid"),  # rojo claro
+    "CAMANBET": PatternFill(start_color="E2FECD", end_color="E2FECD", fill_type="solid"),      # azul claro
+    "DORADOBET CR": PatternFill(start_color="F8D3D3", end_color="F8D3D3", fill_type="solid"),     # verde claro#A8E6FA
+    "DORADOBET GT": PatternFill(start_color="F8D3D3", end_color="F8D3D3", fill_type="solid"),     # morado claro#EED247
+    "DORADOBET PE": PatternFill(start_color="F8D3D3", end_color="F8D3D3", fill_type="solid"),     # morado claro
+    "DORADOBET SV": PatternFill(start_color="F8D3D3", end_color="F8D3D3", fill_type="solid"),     # morado claro
+    "ECUABET": PatternFill(start_color="FFED8C", end_color="FFED8C", fill_type="solid"),     # morado claro
+    "GANAPLAY GT": PatternFill(start_color="C9C9C9", end_color="C9C9C9", fill_type="solid"),     # morado claro
+    "GANAPLAY SV": PatternFill(start_color="C9C9C9", end_color="C9C9C9", fill_type="solid"),     # morado claro
+    "PANIPLAY": PatternFill(start_color="ABFBFE", end_color="ABFBFE", fill_type="solid"),     # morado claro
 }
 
+
+### ---------- Funcion para escribir tarea en cada una de las celdas seleccionadas para cada dia ---------- ###
 def escribir_tarea(ws, semana, dia_semana, texto, mapa_tareas, partner):
     if semana not in mapa_tareas or dia_semana not in mapa_tareas[semana]:
         return
@@ -328,6 +342,7 @@ def escribir_tarea(ws, semana, dia_semana, texto, mapa_tareas, partner):
                 cel.fill = partner_fills[partner_key]
             return
 
+### ---------- Funcion para escribir tarea en base a la plantilla dinamica dependiendo del mes ---------- ###
 def llenar_tareas_calendario(wb, nombre_hoja, df, año, mes, mapa_tareas, persona_substr):
     if nombre_hoja not in wb.sheetnames:
         print(f"⚠️ La hoja '{nombre_hoja}' no existe (saltando).")
@@ -374,11 +389,11 @@ def llenar_tareas_calendario(wb, nombre_hoja, df, año, mes, mapa_tareas, person
                     )
                     escribir_tarea(ws, semana, dia_semana, texto, mapa_tareas, partner)
 
-# Aplicar a todas las hojas/personas detectadas
+### ---------- Llenar cada una de las tareas dependiendo del agente ---------- ###
 for persona_substr, hoja_name in hojas_persona.items():
     llenar_tareas_calendario(wb, hoja_name, df_mes, año, mes, mapa_tareas, persona_substr)
     print(f"✅ Se llenaron tareas para '{persona_substr}' en hoja '{hoja_name}'")
 
-# Guardar resultado
+### ---------- Se guarda el libro excel con todos los datos resultantes ---------- ###
 wb.save(nombre_salida)
 print(f"\n✅ Calendario de {nombre_mes} guardado en '{nombre_salida}'")
