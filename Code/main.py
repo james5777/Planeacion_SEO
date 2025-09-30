@@ -22,7 +22,7 @@ import re
 
 ### ---------- Parámetros globales ---------- ###
 año = 2025
-mes = 10  # Seleccionar el mes (1-12)
+mes = 9  # Seleccionar el mes (1-12)
 
 # Ruta de la carpeta de los archivos excels a correr
 carpeta = Path("Archivos/archivos_origen")
@@ -99,6 +99,7 @@ mapeo_partners = {
     'Planeación contenido blog GanaPlay GT 2025.xlsx': 'Ganaplay GT',
     'Planeación contenido blog GanaPlay SV 2025.xlsx': 'Ganaplay SV',
     'Planeación contenido blog PaniPlay 2025.xlsx': 'Paniplay'
+
 }
 ### ---------- Se agrega una nueva columna con los nombres de los parners ---------- ###
 df_generalizado[name_column_partner] = df_generalizado[name_column_archivo_origen].map(mapeo_partners)
@@ -180,21 +181,27 @@ meses_es = {
 nombre_mes = meses_es[mes]
 
 ### ---------- Nombre de archivo de plantilla ---------- ###
-nombre_plantilla = f"{nombre_mes}.xlsx"
+nombre_plantilla_base = "plantilla.xlsx"
+nombre_salida_x = f"{nombre_mes}_lleno.xlsx"
+nombre_plantilla_x = nombre_plantilla_base
 
-### ---------- Nombre de archivo de salida ---------- ###
-nombre_salida = f"{nombre_mes}_lleno.xlsx"
 
 ### ---------- Conexion con SQLite para traer columnas ---------- ###
+# Traer tareas de mes actual y mes anterior desde SQLite
 mes_str = f"{año}-{mes:02d}"
+mes_ant = mes - 1 if mes > 1 else 12
+año_ant = año if mes > 1 else año - 1
+mes_ant_str = f"{año_ant}-{mes_ant:02d}"
+
 with sqlite3.connect(rutadb) as conn:
     query = f"""
     SELECT *
     FROM "{name_tabla_general}"
-    WHERE STRFTIME('%Y-%m', "Fecha de producción") = '{mes_str}'
-       OR STRFTIME('%Y-%m', "Fecha de publicación") = '{mes_str}';
+    WHERE STRFTIME('%Y-%m', "Fecha de producción") IN ('{mes_str}', '{mes_ant_str}')
+       OR STRFTIME('%Y-%m', "Fecha de publicación") IN ('{mes_str}', '{mes_ant_str}');
     """
     df_mes = pd.read_sql_query(query, conn)
+
 
 ### ---------- convertir fechas a date por si acaso (si vienen como strings) ---------- ###
 for col in [name_column_fecha_produccion, name_column_fecha_publicacion]:
@@ -274,7 +281,7 @@ def llenar_encabezados_calendario(wb, nombre_hoja, año, mes, mapa_encabezados, 
             semana += 1
 
 # abrir plantilla
-wb = load_workbook(nombre_plantilla)
+wb = load_workbook(nombre_plantilla_base)
 
 # Detectar hojas por persona buscando substring en nombre de hoja ( tolerant )
 personas = ["manuela", "juan manuel", "santiago"]
@@ -389,11 +396,81 @@ def llenar_tareas_calendario(wb, nombre_hoja, df, año, mes, mapa_tareas, person
                     )
                     escribir_tarea(ws, semana, dia_semana, texto, mapa_tareas, partner)
 
-### ---------- Llenar cada una de las tareas dependiendo del agente ---------- ###
-for persona_substr, hoja_name in hojas_persona.items():
-    llenar_tareas_calendario(wb, hoja_name, df_mes, año, mes, mapa_tareas, persona_substr)
-    print(f"✅ Se llenaron tareas para '{persona_substr}' en hoja '{hoja_name}'")
+# ---------------- GENERACIÓN DE CALENDARIOS PARA TODOS LOS MESES IMPLICADOS ---------------- #
 
-### ---------- Se guarda el libro excel con todos los datos resultantes ---------- ###
-wb.save(nombre_salida)
-print(f"\n✅ Calendario de {nombre_mes} guardado en '{nombre_salida}'")
+# ---------------- GENERACIÓN DE CALENDARIOS ---------------- #
+
+meses_a_generar = set()
+meses_a_generar.add((año, mes))  # mes principal
+
+# Calcular mes anterior
+mes_ant = mes - 1 if mes > 1 else 12
+año_ant = año if mes > 1 else año - 1
+meses_a_generar.add((año_ant, mes_ant))
+
+for (año_x, mes_x) in sorted(meses_a_generar):
+    nombre_mes_x = meses_es[mes_x]
+    nombre_plantilla_x = nombre_plantilla_base
+    nombre_salida_x = f"{nombre_mes_x}_lleno.xlsx"
+
+    # Normalizar fechas a datetime64 para filtrados seguros
+    fechas_prod = pd.to_datetime(df_mes[name_column_fecha_produccion], errors="coerce")
+    fechas_pub = pd.to_datetime(df_mes[name_column_fecha_publicacion], errors="coerce")
+
+    if (año_x, mes_x) == (año, mes):
+        # Mes principal → todas las tareas que caen en este mes
+        df_mes_x = df_mes[
+            ((fechas_prod.dt.month == mes) & (fechas_prod.dt.year == año)) |
+            ((fechas_pub.dt.month == mes) & (fechas_pub.dt.year == año))
+        ]
+    else:
+    # Mes anterior →
+    # a) producciones en mes anterior con publicación en mes actual
+    # b) publicaciones reales que caen en mes anterior
+    # c) tareas totalmente dentro del mes anterior (prod y pub en mes anterior)
+
+        fechas_prod = pd.to_datetime(df_mes[name_column_fecha_produccion], errors="coerce")
+        fechas_pub  = pd.to_datetime(df_mes[name_column_fecha_publicacion], errors="coerce")
+
+        df_mes_x = df_mes[
+            (
+                (fechas_prod.dt.month == mes_x) & (fechas_prod.dt.year == año_x) &
+                (fechas_pub.dt.month == mes) & (fechas_pub.dt.year == año)
+            )
+            |
+            (
+                (fechas_pub.dt.month == mes_x) & (fechas_pub.dt.year == año_x)
+            )
+            |
+            (
+                (fechas_prod.dt.month == mes_x) & (fechas_prod.dt.year == año_x) &
+                (fechas_pub.dt.month == mes_x) & (fechas_pub.dt.year == año_x)
+            )
+        ]
+    
+
+    if df_mes_x.empty:
+        print(f"⚠️ No se encontraron tareas para {nombre_mes_x}.")
+        continue
+
+    print(f"\n✅ Generando calendario para {nombre_mes_x} con {len(df_mes_x)} tareas...")
+
+    wb = load_workbook(nombre_plantilla_x)
+
+    # Detectar hojas por persona
+    hojas_persona = {}
+    for p in personas:
+        encontrada = next((s for s in wb.sheetnames if p in s.lower()), None)
+        if encontrada:
+            hojas_persona[p] = encontrada
+        else:
+            print(f"⚠️ No se encontró hoja para '{p}' en la plantilla {nombre_plantilla_x} (buscando substring).")
+
+    # Llenar encabezados y tareas
+    for persona_substr, hoja_name in hojas_persona.items():
+        llenar_encabezados_calendario(wb, hoja_name, año_x, mes_x, mapa_encabezados, df_mes_x, persona_substr)
+        llenar_tareas_calendario(wb, hoja_name, df_mes_x, año_x, mes_x, mapa_tareas, persona_substr)
+        print(f"✅ Se llenaron tareas para '{persona_substr}' en hoja '{hoja_name}' ({nombre_mes_x})")
+
+    wb.save(nombre_salida_x)
+    print(f"📂 Archivo guardado: {nombre_salida_x}")
