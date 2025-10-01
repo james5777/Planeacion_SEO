@@ -26,9 +26,36 @@ import sys
 año = int(os.getenv("AÑO", "2025"))
 mes = int(os.getenv("MES", "9"))  # Seleccionar el mes (1-12)
 
+def get_resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 def run_main():
+
+    ### ---------- Parámetros globales ---------- ###
+    año = int(os.getenv("AÑO", "2025"))
+    mes = int(os.getenv("MES", "9"))  # Seleccionar el mes (1-12)
+
     carpeta_base = Path(os.getenv("RUTA_CARPETA", ""))
     carpeta = carpeta_base / "Archivos" / "archivos_origen"
+
+    ### ---------- Validaciones ---------- ###
+    ### ---------- Verificar que la carpeta existe y contiene archivos ---------- ###
+    if not carpeta.is_dir():
+        raise FileNotFoundError(f"la carpeta de origen '{carpeta}' no se encontró. verifique la ruta seleccionada")
+
+    archivos = list(carpeta.glob("*.xlsx"))
+    if not archivos:
+        raise FileNotFoundError(f"la carpeta de origen '{carpeta}' no contiene archivos. verifique la ruta seleccionada")
+    
+
+    
 
 
     ### ---------- Ruta de la base de datos ---------- ###
@@ -49,6 +76,8 @@ def run_main():
     name_column_partner = 'Partner'
     name_column_blog_plataforma = 'Blog/Plataforma'
 
+    
+
     # ---------- Lectura y normalización de archivos fuente (igual que tenías) ----------
     dataframes = []
 
@@ -57,36 +86,52 @@ def run_main():
 
     ### ---------- Bucle que recorre todos los archivos excel y sus hojas ---------- ###
     for archivo in carpeta.glob("*.xlsx"):
-        xls = pd.ExcelFile(archivo)
-        for hoja in xls.sheet_names:
-            if hoja in hojas_a_ignorar:
-                continue
-            df = pd.read_excel(xls, sheet_name=hoja)
-            df.columns = df.columns.str.strip()
+        try:
+            xls = pd.ExcelFile(archivo)
+            for hoja in xls.sheet_names:
+                if hoja in hojas_a_ignorar:
+                    continue
+                df = pd.read_excel(xls, sheet_name=hoja)
+                df.columns = df.columns.str.strip()
 
-            # caso Ecuabet si tiene columna 'Tema'
-            if 'Planeación contenido blog Ecuabet' in archivo.name and 'Tema' in df.columns:
-                df[name_column_tema_blog] = df['Tema']
-                df = df.drop(columns=['Tema'])
+                # caso Ecuabet si tiene columna 'Tema'
+                if 'Planeación contenido blog Ecuabet' in archivo.name and 'Tema' in df.columns:
+                    df[name_column_tema_blog] = df['Tema']
+                    df = df.drop(columns=['Tema'])
 
-    ### ---------- Columnas que vamos a utilizar en el dataframe generalizado ---------- ###
-            columnas_obligatorias = [
-                name_column_blog_plataforma,
-                name_column_tema_blog,
-                name_column_fecha_produccion,
-                name_column_responsable_produccion,
-                name_column_tiempo_estimado_produc,
-                name_column_fecha_publicacion,
-                name_column_responsable_publicacion,
-                name_column_tiempo_estimado_public
-            ]
-            cols_existentes = [c for c in columnas_obligatorias if c in df.columns]
-            if cols_existentes: 
-                df = df.dropna(subset=cols_existentes, how="all")
+               
+                ### ---------- Columnas que vamos a utilizar en el dataframe generalizado ---------- ###
+                columnas_obligatorias = [
+                    name_column_blog_plataforma,
+                    name_column_tema_blog,
+                    name_column_fecha_produccion,
+                    name_column_responsable_produccion,
+                    name_column_tiempo_estimado_produc,
+                    name_column_fecha_publicacion,
+                    name_column_responsable_publicacion,
+                    name_column_tiempo_estimado_public
+                ]
+                cols_existentes = [c for c in columnas_obligatorias if c in df.columns]
+                if cols_existentes: 
+                    df = df.dropna(subset=cols_existentes, how="all")
 
-            df["Archivo_Origen"] = archivo.name
-            df["Hoja_Origen"] = hoja
-            dataframes.append(df)
+                df["Archivo_Origen"] = archivo.name
+                df["Hoja_Origen"] = hoja
+
+                # #Validacion de formato fecha
+                # for col in [name_column_fecha_produccion, name_column_fecha_publicacion]:
+                #     df_col_necesarias = convertir_columna_fecha(df_col_necesarias, col)
+                #     if df_col_necesarias[col].isna().any():
+                #         raise ValueError(f"⚠️ Advertencia: En el archivo '{archivo.name}', hoja '{hoja}', columna '{col}' hay fechas inválidas o mal formateadas.")
+
+                dataframes.append(df)
+            xls.close()
+        except PermissionError:
+            raise PermissionError(f"El archivo '{archivo.name}' está abierto. por favor, cierrelo e intente de nuevo.")
+        except Exception as e:
+            raise RuntimeError(f"Ocurrió un error al procesar el archivo '{archivo.name}': {e}")
+        
+        
 
     df_generalizado = pd.concat(dataframes, ignore_index=True)
     df_generalizado.columns = df_generalizado.columns.str.strip()
@@ -185,7 +230,7 @@ def run_main():
     nombre_mes = meses_es[mes]
 
     ### ---------- Nombre de archivo de plantilla ---------- ###
-    nombre_plantilla_base = "plantilla.xlsx"
+    nombre_plantilla_base = get_resource_path("plantilla.xlsx")
     nombre_salida_x = Path(f"Calendarios obtenidos/Calendario {nombre_mes}.xlsx")
     nombre_plantilla_x = nombre_plantilla_base
 
@@ -458,6 +503,9 @@ def run_main():
         
 
         if df_mes_x.empty:
+            raise ValueError(f"No se encontraron tareas para {mes_x}/{año_x}.")
+
+
             print(f"⚠️ No se encontraron tareas para {nombre_mes_x}.")
             continue
 
@@ -485,3 +533,4 @@ def run_main():
 
 if __name__ == "__main__":
     run_main()
+
