@@ -21,6 +21,11 @@ import re
 import os
 import sys
 
+meses_es = {
+    1: "enero", 2: "febrero", 3: "marzo", 4: "abril",
+    5: "mayo", 6: "junio", 7: "julio", 8: "agosto",
+    9: "septiembre", 10: "octubre", 11: "noviembre", 12: "diciembre"
+}
 
 ### ---------- Parámetros globales ---------- ###
 año = int(os.getenv("AÑO", "2025"))
@@ -36,11 +41,12 @@ def get_resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-def run_main():
+def run_main(año_param, mes_param):
+
 
     ### ---------- Parámetros globales ---------- ###
-    año = int(os.getenv("AÑO", "2025"))
-    mes = int(os.getenv("MES", "9"))  # Seleccionar el mes (1-12)
+    año = año_param
+    mes = mes_param
 
     carpeta_base = Path(os.getenv("RUTA_CARPETA", ""))
     carpeta = carpeta_base / "Archivos" / "archivos_origen"
@@ -530,7 +536,4 @@ def run_main():
 
         wb.save(nombre_salida_x)
         print(f"📂 Archivo guardado: {nombre_salida_x}")
-
-if __name__ == "__main__":
-    run_main()
 
