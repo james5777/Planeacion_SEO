@@ -1529,6 +1529,82 @@
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\asyncio\\windows_utils.py',
    'PYMODULE'),
+  ('attr',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\__init__.py',
+   'PYMODULE'),
+  ('attr._cmp',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\_cmp.py',
+   'PYMODULE'),
+  ('attr._compat',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\_compat.py',
+   'PYMODULE'),
+  ('attr._config',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\_config.py',
+   'PYMODULE'),
+  ('attr._funcs',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\_funcs.py',
+   'PYMODULE'),
+  ('attr._make',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\_make.py',
+   'PYMODULE'),
+  ('attr._next_gen',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\_next_gen.py',
+   'PYMODULE'),
+  ('attr._version_info',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\_version_info.py',
+   'PYMODULE'),
+  ('attr.converters',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\converters.py',
+   'PYMODULE'),
+  ('attr.exceptions',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\exceptions.py',
+   'PYMODULE'),
+  ('attr.filters',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\filters.py',
+   'PYMODULE'),
+  ('attr.setters',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\setters.py',
+   'PYMODULE'),
+  ('attr.validators',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attr\\validators.py',
+   'PYMODULE'),
+  ('attrs',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attrs\\__init__.py',
+   'PYMODULE'),
+  ('attrs.converters',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attrs\\converters.py',
+   'PYMODULE'),
+  ('attrs.exceptions',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attrs\\exceptions.py',
+   'PYMODULE'),
+  ('attrs.filters',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attrs\\filters.py',
+   'PYMODULE'),
+  ('attrs.setters',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attrs\\setters.py',
+   'PYMODULE'),
+  ('attrs.validators',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\attrs\\validators.py',
+   'PYMODULE'),
   ('backports',
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\setuptools\\_vendor\\backports\\__init__.py',
@@ -1556,6 +1632,70 @@
   ('calendar',
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\calendar.py',
+   'PYMODULE'),
+  ('cffi',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\__init__.py',
+   'PYMODULE'),
+  ('cffi._imp_emulation',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\_imp_emulation.py',
+   'PYMODULE'),
+  ('cffi._shimmed_dist_utils',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\_shimmed_dist_utils.py',
+   'PYMODULE'),
+  ('cffi.api',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\api.py',
+   'PYMODULE'),
+  ('cffi.cffi_opcode',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\cffi_opcode.py',
+   'PYMODULE'),
+  ('cffi.commontypes',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\commontypes.py',
+   'PYMODULE'),
+  ('cffi.cparser',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\cparser.py',
+   'PYMODULE'),
+  ('cffi.error',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\error.py',
+   'PYMODULE'),
+  ('cffi.ffiplatform',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\ffiplatform.py',
+   'PYMODULE'),
+  ('cffi.lock',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\lock.py',
+   'PYMODULE'),
+  ('cffi.model',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\model.py',
+   'PYMODULE'),
+  ('cffi.pkgconfig',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\pkgconfig.py',
+   'PYMODULE'),
+  ('cffi.recompiler',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\recompiler.py',
+   'PYMODULE'),
+  ('cffi.vengine_cpy',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\vengine_cpy.py',
+   'PYMODULE'),
+  ('cffi.vengine_gen',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\vengine_gen.py',
+   'PYMODULE'),
+  ('cffi.verifier',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\cffi\\verifier.py',
    'PYMODULE'),
   ('charset_normalizer',
    'C:\\Users\\Jhon '
@@ -2125,6 +2265,30 @@
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\http\\server.py',
    'PYMODULE'),
+  ('idna',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\idna\\__init__.py',
+   'PYMODULE'),
+  ('idna.core',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\idna\\core.py',
+   'PYMODULE'),
+  ('idna.idnadata',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\idna\\idnadata.py',
+   'PYMODULE'),
+  ('idna.intranges',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\idna\\intranges.py',
+   'PYMODULE'),
+  ('idna.package_data',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\idna\\package_data.py',
+   'PYMODULE'),
+  ('idna.uts46data',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\idna\\uts46data.py',
+   'PYMODULE'),
   ('importlib',
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\importlib\\__init__.py',
@@ -2654,6 +2818,98 @@
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Roaming\\Python\\Python313\\site-packages\\jedi\\settings.py',
    'PYMODULE'),
+  ('jinja2',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\__init__.py',
+   'PYMODULE'),
+  ('jinja2._identifier',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\_identifier.py',
+   'PYMODULE'),
+  ('jinja2.async_utils',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\async_utils.py',
+   'PYMODULE'),
+  ('jinja2.bccache',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\bccache.py',
+   'PYMODULE'),
+  ('jinja2.compiler',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\compiler.py',
+   'PYMODULE'),
+  ('jinja2.constants',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\constants.py',
+   'PYMODULE'),
+  ('jinja2.debug',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\debug.py',
+   'PYMODULE'),
+  ('jinja2.defaults',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\defaults.py',
+   'PYMODULE'),
+  ('jinja2.environment',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\environment.py',
+   'PYMODULE'),
+  ('jinja2.exceptions',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\exceptions.py',
+   'PYMODULE'),
+  ('jinja2.ext',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\ext.py',
+   'PYMODULE'),
+  ('jinja2.filters',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\filters.py',
+   'PYMODULE'),
+  ('jinja2.idtracking',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\idtracking.py',
+   'PYMODULE'),
+  ('jinja2.lexer',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\lexer.py',
+   'PYMODULE'),
+  ('jinja2.loaders',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\loaders.py',
+   'PYMODULE'),
+  ('jinja2.nodes',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\nodes.py',
+   'PYMODULE'),
+  ('jinja2.optimizer',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\optimizer.py',
+   'PYMODULE'),
+  ('jinja2.parser',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\parser.py',
+   'PYMODULE'),
+  ('jinja2.runtime',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\runtime.py',
+   'PYMODULE'),
+  ('jinja2.sandbox',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\sandbox.py',
+   'PYMODULE'),
+  ('jinja2.tests',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\tests.py',
+   'PYMODULE'),
+  ('jinja2.utils',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\utils.py',
+   'PYMODULE'),
+  ('jinja2.visitor',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\jinja2\\visitor.py',
+   'PYMODULE'),
   ('json',
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\json\\__init__.py',
@@ -2821,6 +3077,14 @@
   ('main',
    'C:\\Users\\Jhon Caro\\OneDrive - VIRTUALSOFT SERVICIOS & SOFTWARE '
    'S.A.S\\Documentos\\GitHub\\Planeaci-n_SEO\\Code\\main.py',
+   'PYMODULE'),
+  ('markupsafe',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\markupsafe\\__init__.py',
+   'PYMODULE'),
+  ('markupsafe._native',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\markupsafe\\_native.py',
    'PYMODULE'),
   ('matplotlib_inline',
    'C:\\Users\\Jhon '
@@ -4225,6 +4489,22 @@
   ('optparse',
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\optparse.py',
+   'PYMODULE'),
+  ('outcome',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\outcome\\__init__.py',
+   'PYMODULE'),
+  ('outcome._impl',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\outcome\\_impl.py',
+   'PYMODULE'),
+  ('outcome._util',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\outcome\\_util.py',
+   'PYMODULE'),
+  ('outcome._version',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\outcome\\_version.py',
    'PYMODULE'),
   ('packaging',
    'C:\\Users\\Jhon '
@@ -6126,6 +6406,50 @@
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\py_compile.py',
    'PYMODULE'),
+  ('pycparser',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pycparser\\__init__.py',
+   'PYMODULE'),
+  ('pycparser.ast_transforms',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pycparser\\ast_transforms.py',
+   'PYMODULE'),
+  ('pycparser.c_ast',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pycparser\\c_ast.py',
+   'PYMODULE'),
+  ('pycparser.c_lexer',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pycparser\\c_lexer.py',
+   'PYMODULE'),
+  ('pycparser.c_parser',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pycparser\\c_parser.py',
+   'PYMODULE'),
+  ('pycparser.lextab',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pycparser\\lextab.py',
+   'PYMODULE'),
+  ('pycparser.ply',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pycparser\\ply\\__init__.py',
+   'PYMODULE'),
+  ('pycparser.ply.lex',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pycparser\\ply\\lex.py',
+   'PYMODULE'),
+  ('pycparser.ply.yacc',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pycparser\\ply\\yacc.py',
+   'PYMODULE'),
+  ('pycparser.plyparser',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pycparser\\plyparser.py',
+   'PYMODULE'),
+  ('pycparser.yacctab',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pycparser\\yacctab.py',
+   'PYMODULE'),
   ('pydoc',
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\pydoc.py',
@@ -7862,10 +8186,6 @@
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\setuptools\\_vendor\\tomli\\_types.py',
    'PYMODULE'),
-  ('setuptools._vendor.typing_extensions',
-   'C:\\Users\\Jhon '
-   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\setuptools\\_vendor\\typing_extensions.py',
-   'PYMODULE'),
   ('setuptools._vendor.wheel',
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\setuptools\\_vendor\\wheel\\__init__.py',
@@ -8162,6 +8482,18 @@
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\smtplib.py',
    'PYMODULE'),
+  ('sniffio',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\sniffio\\__init__.py',
+   'PYMODULE'),
+  ('sniffio._impl',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\sniffio\\_impl.py',
+   'PYMODULE'),
+  ('sniffio._version',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\sniffio\\_version.py',
+   'PYMODULE'),
   ('socket',
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\socket.py',
@@ -8169,6 +8501,22 @@
   ('socketserver',
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\socketserver.py',
+   'PYMODULE'),
+  ('sortedcontainers',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\sortedcontainers\\__init__.py',
+   'PYMODULE'),
+  ('sortedcontainers.sorteddict',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\sortedcontainers\\sorteddict.py',
+   'PYMODULE'),
+  ('sortedcontainers.sortedlist',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\sortedcontainers\\sortedlist.py',
+   'PYMODULE'),
+  ('sortedcontainers.sortedset',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\sortedcontainers\\sortedset.py',
    'PYMODULE'),
   ('sqlite3',
    'C:\\Users\\Jhon '
@@ -8462,6 +8810,286 @@
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Roaming\\Python\\Python313\\site-packages\\traitlets\\utils\\warnings.py',
    'PYMODULE'),
+  ('trio',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\__init__.py',
+   'PYMODULE'),
+  ('trio._abc',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_abc.py',
+   'PYMODULE'),
+  ('trio._channel',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_channel.py',
+   'PYMODULE'),
+  ('trio._core',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\__init__.py',
+   'PYMODULE'),
+  ('trio._core._asyncgens',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_asyncgens.py',
+   'PYMODULE'),
+  ('trio._core._concat_tb',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_concat_tb.py',
+   'PYMODULE'),
+  ('trio._core._entry_queue',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_entry_queue.py',
+   'PYMODULE'),
+  ('trio._core._exceptions',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_exceptions.py',
+   'PYMODULE'),
+  ('trio._core._generated_instrumentation',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_generated_instrumentation.py',
+   'PYMODULE'),
+  ('trio._core._generated_io_epoll',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_generated_io_epoll.py',
+   'PYMODULE'),
+  ('trio._core._generated_io_kqueue',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_generated_io_kqueue.py',
+   'PYMODULE'),
+  ('trio._core._generated_io_windows',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_generated_io_windows.py',
+   'PYMODULE'),
+  ('trio._core._generated_run',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_generated_run.py',
+   'PYMODULE'),
+  ('trio._core._generated_windows_ffi',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_generated_windows_ffi.py',
+   'PYMODULE'),
+  ('trio._core._instrumentation',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_instrumentation.py',
+   'PYMODULE'),
+  ('trio._core._io_common',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_io_common.py',
+   'PYMODULE'),
+  ('trio._core._io_epoll',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_io_epoll.py',
+   'PYMODULE'),
+  ('trio._core._io_kqueue',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_io_kqueue.py',
+   'PYMODULE'),
+  ('trio._core._io_windows',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_io_windows.py',
+   'PYMODULE'),
+  ('trio._core._ki',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_ki.py',
+   'PYMODULE'),
+  ('trio._core._local',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_local.py',
+   'PYMODULE'),
+  ('trio._core._mock_clock',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_mock_clock.py',
+   'PYMODULE'),
+  ('trio._core._parking_lot',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_parking_lot.py',
+   'PYMODULE'),
+  ('trio._core._run',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_run.py',
+   'PYMODULE'),
+  ('trio._core._run_context',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_run_context.py',
+   'PYMODULE'),
+  ('trio._core._thread_cache',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_thread_cache.py',
+   'PYMODULE'),
+  ('trio._core._traps',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_traps.py',
+   'PYMODULE'),
+  ('trio._core._unbounded_queue',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_unbounded_queue.py',
+   'PYMODULE'),
+  ('trio._core._wakeup_socketpair',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_wakeup_socketpair.py',
+   'PYMODULE'),
+  ('trio._core._windows_cffi',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_core\\_windows_cffi.py',
+   'PYMODULE'),
+  ('trio._deprecate',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_deprecate.py',
+   'PYMODULE'),
+  ('trio._dtls',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_dtls.py',
+   'PYMODULE'),
+  ('trio._file_io',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_file_io.py',
+   'PYMODULE'),
+  ('trio._highlevel_generic',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_highlevel_generic.py',
+   'PYMODULE'),
+  ('trio._highlevel_open_tcp_listeners',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_highlevel_open_tcp_listeners.py',
+   'PYMODULE'),
+  ('trio._highlevel_open_tcp_stream',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_highlevel_open_tcp_stream.py',
+   'PYMODULE'),
+  ('trio._highlevel_open_unix_stream',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_highlevel_open_unix_stream.py',
+   'PYMODULE'),
+  ('trio._highlevel_serve_listeners',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_highlevel_serve_listeners.py',
+   'PYMODULE'),
+  ('trio._highlevel_socket',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_highlevel_socket.py',
+   'PYMODULE'),
+  ('trio._highlevel_ssl_helpers',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_highlevel_ssl_helpers.py',
+   'PYMODULE'),
+  ('trio._path',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_path.py',
+   'PYMODULE'),
+  ('trio._signals',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_signals.py',
+   'PYMODULE'),
+  ('trio._socket',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_socket.py',
+   'PYMODULE'),
+  ('trio._ssl',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_ssl.py',
+   'PYMODULE'),
+  ('trio._subprocess',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_subprocess.py',
+   'PYMODULE'),
+  ('trio._subprocess_platform',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_subprocess_platform\\__init__.py',
+   'PYMODULE'),
+  ('trio._subprocess_platform.kqueue',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_subprocess_platform\\kqueue.py',
+   'PYMODULE'),
+  ('trio._subprocess_platform.waitid',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_subprocess_platform\\waitid.py',
+   'PYMODULE'),
+  ('trio._subprocess_platform.windows',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_subprocess_platform\\windows.py',
+   'PYMODULE'),
+  ('trio._sync',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_sync.py',
+   'PYMODULE'),
+  ('trio._threads',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_threads.py',
+   'PYMODULE'),
+  ('trio._timeouts',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_timeouts.py',
+   'PYMODULE'),
+  ('trio._unix_pipes',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_unix_pipes.py',
+   'PYMODULE'),
+  ('trio._util',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_util.py',
+   'PYMODULE'),
+  ('trio._version',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_version.py',
+   'PYMODULE'),
+  ('trio._wait_for_object',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_wait_for_object.py',
+   'PYMODULE'),
+  ('trio._windows_pipes',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\_windows_pipes.py',
+   'PYMODULE'),
+  ('trio.abc',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\abc.py',
+   'PYMODULE'),
+  ('trio.from_thread',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\from_thread.py',
+   'PYMODULE'),
+  ('trio.lowlevel',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\lowlevel.py',
+   'PYMODULE'),
+  ('trio.socket',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\socket.py',
+   'PYMODULE'),
+  ('trio.testing',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\testing\\__init__.py',
+   'PYMODULE'),
+  ('trio.testing._check_streams',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\testing\\_check_streams.py',
+   'PYMODULE'),
+  ('trio.testing._checkpoints',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\testing\\_checkpoints.py',
+   'PYMODULE'),
+  ('trio.testing._memory_streams',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\testing\\_memory_streams.py',
+   'PYMODULE'),
+  ('trio.testing._network',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\testing\\_network.py',
+   'PYMODULE'),
+  ('trio.testing._raises_group',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\testing\\_raises_group.py',
+   'PYMODULE'),
+  ('trio.testing._sequencer',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\testing\\_sequencer.py',
+   'PYMODULE'),
+  ('trio.testing._trio_test',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\testing\\_trio_test.py',
+   'PYMODULE'),
+  ('trio.to_thread',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\trio\\to_thread.py',
+   'PYMODULE'),
   ('ttkbootstrap',
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\ttkbootstrap\\__init__.py',
@@ -8553,6 +9181,10 @@
   ('typing',
    'C:\\Users\\Jhon '
    'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\typing.py',
+   'PYMODULE'),
+  ('typing_extensions',
+   'C:\\Users\\Jhon '
+   'Caro\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\typing_extensions.py',
    'PYMODULE'),
   ('unittest',
    'C:\\Users\\Jhon '

@@ -21,6 +21,7 @@ import re
 import os
 import sys
 
+# ------- Diccionario de meses ------- #
 meses_es = {
     1: "enero", 2: "febrero", 3: "marzo", 4: "abril",
     5: "mayo", 6: "junio", 7: "julio", 8: "agosto",
@@ -31,6 +32,7 @@ meses_es = {
 año = int(os.getenv("AÑO", "2025"))
 mes = int(os.getenv("MES", "9"))  # Seleccionar el mes (1-12)
 
+# ------- Funcion para condicion si se ejecuta en la app, o desde el entorno de desarrollo ------- #
 def get_resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
@@ -41,36 +43,34 @@ def get_resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
+# ------- Se encapsula todo el codigo dentro de una funcion la cual sera llamada desde app.py ------- #
 def run_main(año_param, mes_param):
-
 
     ### ---------- Parámetros globales ---------- ###
     año = año_param
     mes = mes_param
 
+    # ------- Rutas de carpetas y ubicaciones ------- #
     carpeta_base = Path(os.getenv("RUTA_CARPETA", ""))
     carpeta = carpeta_base / "Archivos" / "archivos_origen"
 
-    ### ---------- Validaciones ---------- ###
-    ### ---------- Verificar que la carpeta existe y contiene archivos ---------- ###
+    # ---------- Validaciones ---------- #
+    # ------- Validacion: verifica si la carpeta de origen existe en la ruta seleccionada ------- #
     if not carpeta.is_dir():
         raise FileNotFoundError(f"la carpeta de origen '{carpeta}' no se encontró. verifique la ruta seleccionada")
 
+    # ------- Verifica si si hay archivos en la carpeta de origen ------- #
     archivos = list(carpeta.glob("*.xlsx"))
     if not archivos:
         raise FileNotFoundError(f"la carpeta de origen '{carpeta}' no contiene archivos. verifique la ruta seleccionada")
-    
 
-    
-
-
-    ### ---------- Ruta de la base de datos ---------- ###
+    # ------- Ruta de la base de datos. ------- #
     rutadb = carpeta_base / "Archivos" / "Archivos_base_de_datos" / "Archivo_base_de_datos.db"
 
-    ### ---------- Nombre de la tabla ---------- ###
+    # ------- Nombre de la tabla general ------- #
     name_tabla_general = "Datos_generales"
 
-    ### ---------- Nombres de las Columnas ---------- ###
+    # ---------- Nombres de las columnas dentro del dataframe y la base de datos SQLite ---------- #
     name_column_archivo_origen = 'Archivo_Origen'
     name_column_tiempo_estimado_produc = 'Tiempo estimado produccion'
     name_column_tiempo_estimado_public = 'Tiempo estimado publicacion'
@@ -82,15 +82,13 @@ def run_main(año_param, mes_param):
     name_column_partner = 'Partner'
     name_column_blog_plataforma = 'Blog/Plataforma'
 
-    
-
-    # ---------- Lectura y normalización de archivos fuente (igual que tenías) ----------
+    # ------- Lista donde se van a guardar los dataframe creados ------- #
     dataframes = []
 
-    ### ---------- Hojas que no se van a recorrer ---------- ###
+    # ------- Hojas que no se van a recorrer ------- #
     hojas_a_ignorar = ['Contenido futuro', 'Rendimiento contenido']
 
-    ### ---------- Bucle que recorre todos los archivos excel y sus hojas ---------- ###
+    # ------- Bucle que recorre todos los archivos excel y sus hojas ------- #
     for archivo in carpeta.glob("*.xlsx"):
         try:
             xls = pd.ExcelFile(archivo)
@@ -100,13 +98,13 @@ def run_main(año_param, mes_param):
                 df = pd.read_excel(xls, sheet_name=hoja)
                 df.columns = df.columns.str.strip()
 
-                # caso Ecuabet si tiene columna 'Tema'
+                # ------- El archivo de ecuabet tiene los temas en la columna tema/blog, entonces se renombra ------- #
                 if 'Planeación contenido blog Ecuabet' in archivo.name and 'Tema' in df.columns:
                     df[name_column_tema_blog] = df['Tema']
                     df = df.drop(columns=['Tema'])
 
                
-                ### ---------- Columnas que vamos a utilizar en el dataframe generalizado ---------- ###
+                # ------- Columnas que se van a usar en los dataframe y en las bases de datos ------- #
                 columnas_obligatorias = [
                     name_column_blog_plataforma,
                     name_column_tema_blog,
@@ -121,6 +119,7 @@ def run_main(año_param, mes_param):
                 if cols_existentes: 
                     df = df.dropna(subset=cols_existentes, how="all")
 
+                # ------- Se crean columnas donde se especifica a que archivo y a que hoja pertenece esa fila de datos ------- #
                 df["Archivo_Origen"] = archivo.name
                 df["Hoja_Origen"] = hoja
 
@@ -130,36 +129,43 @@ def run_main(año_param, mes_param):
                 #     if df_col_necesarias[col].isna().any():
                 #         raise ValueError(f"⚠️ Advertencia: En el archivo '{archivo.name}', hoja '{hoja}', columna '{col}' hay fechas inválidas o mal formateadas.")
 
+                # ------- Se agrega cada uno de los dataframes resultantes a la lista "DataFrames" ------- #
                 dataframes.append(df)
             xls.close()
+
+        # ------- Manejo de errores ------- #
+        # ------- Si uno de los archivos esta abierto envia PermissionError ------- #
         except PermissionError:
             raise PermissionError(f"El archivo '{archivo.name}' está abierto. por favor, cierrelo e intente de nuevo.")
+        # ------- Si ocurre un error de algun otro tipo devuelve error RuntimeError ------- #
         except Exception as e:
             raise RuntimeError(f"Ocurrió un error al procesar el archivo '{archivo.name}': {e}")
-        
-        
-
+    
+    # ------- Se concatenan todos los dataframes resultantes en un solo dataframe general ------- #
     df_generalizado = pd.concat(dataframes, ignore_index=True)
+    
+    # ------- Limpieza de nombres de columnas eliminando espacios en blanco al inicio y al final ------- #
     df_generalizado.columns = df_generalizado.columns.str.strip()
 
-    ### ---------- Mapaeo de nombres de partners en relacion a los archivos ---------- ###
+    # ------- Mapeo de nombres de los archivos asignando un nombre de partner ------- #
     mapeo_partners = {
         'Planeación contenido blog Aciertala 2025.xlsx': 'Aciertala',
         'Planeación contenido blog CamanBet 2025.xlsx': 'Camanbet',
         'Planeación contenido blog Doradobet CR 2025.xlsx': 'Doradobet CR',
         'Planeación contenido blog Doradobet GT 2025.xlsx': 'Doradobet GT',
         'Planeación contenido blog Doradobet PE 2025.xlsx': 'Doradobet PE',
+        'Planeación contenido blog Doradobet EC 2025.xlsx': 'Doradobet EC',
         'Planeación Doradobet El Salvador 2025.xlsx': 'Doradobet SV',
         'Planeación contenido blog Ecuabet 2025.xlsx': 'Ecuabet',
         'Planeación contenido blog GanaPlay GT 2025.xlsx': 'Ganaplay GT',
         'Planeación contenido blog GanaPlay SV 2025.xlsx': 'Ganaplay SV',
         'Planeación contenido blog PaniPlay 2025.xlsx': 'Paniplay'
-
     }
-    ### ---------- Se agrega una nueva columna con los nombres de los parners ---------- ###
+
+    # ------- Se agrega la nueva columna con el nombre de los partners ------- #
     df_generalizado[name_column_partner] = df_generalizado[name_column_archivo_origen].map(mapeo_partners)
 
-    # Filtrar columnas que usaremos
+    # ------- Se declaran las columnas que necesitaremos en la base de datos y en los dataframe ------- #
     columnas_necesarias = [
         name_column_archivo_origen, name_column_partner, name_column_blog_plataforma, name_column_tema_blog,
         name_column_fecha_produccion, name_column_responsable_produccion,
@@ -167,11 +173,13 @@ def run_main(año_param, mes_param):
         name_column_responsable_publicacion, name_column_tiempo_estimado_public
     ]
 
-    ### ---------- Se crea un dataframe nuevo con la lista de columnas que vamos a utilizar ---------- ###
+    # ------- Se crea un dataframe con las columnas necesarias declaradas antes ------- #
     df_col_necesarias = df_generalizado[columnas_necesarias].copy()
+
+    # ------- Se normaliza el nombre de las columnas eliminando espacios en blanco. ------- #
     df_col_necesarias.columns = df_col_necesarias.columns.str.strip()
 
-    ### ---------- Normalizacion de fechas, se cambia de Serial de excel a yyyy/mm/dd ---------- ###
+   # ------- Se hace conversion de serial excel a numerico fecha ------- #
     def convertir_columna_fecha(df, col):
         if col not in df.columns:
             return df
@@ -181,12 +189,12 @@ def run_main(año_param, mes_param):
             df[col] = pd.to_datetime(df[col], errors="coerce")
         return df
 
-    ### ---------- Se convierte la columna a tipo date ---------- ###
+    # ------- Se convierten las columnas de fecha a DateTime ------- #
     for col in [name_column_fecha_produccion, name_column_fecha_publicacion]:
         df_col_necesarias = convertir_columna_fecha(df_col_necesarias, col)
         df_col_necesarias[col] = pd.to_datetime(df_col_necesarias[col], errors="coerce").dt.date
 
-    ### ---------- Se convierte los minutos escritos de diferentes formas a numero ---------- ###
+    # ------- Se convierten los numeros escritos de diferentes formas a minuto ------- #
     def convertir_a_minutos(valor):
         if pd.isna(valor):
             return 0
@@ -210,12 +218,12 @@ def run_main(año_param, mes_param):
 
         return total
 
-    # ----------Se aplica la funcion de "Convertir a minutos" para normalizar columnas de tiempos ----------
+    # ------- Se aplica la funcion de convertir minutos para normalizar columnas ------- #
     for col in [name_column_tiempo_estimado_produc, name_column_tiempo_estimado_public]:
         if col in df_col_necesarias.columns:
             df_col_necesarias[col] = df_col_necesarias[col].apply(convertir_a_minutos).fillna(0).astype(int)
 
-    # Guardar en sqlite
+    # ------- Se declara funcion para guardar en SQLite ------- #
     def guardar_en_sqlite(df: pd.DataFrame, nombre_tabla: str, ruta_db: Path, if_exists: str = "replace") -> None:
         if df.empty:
             print(f"\n ⚠️ El DataFrame está vacío. No se insertaron datos en la tabla '{nombre_tabla}'.\n ")
@@ -224,9 +232,10 @@ def run_main(año_param, mes_param):
             df.to_sql(nombre_tabla, conn, if_exists=if_exists, index=False)
         print(f"\n ✅ Se insertaron los datos en la tabla: '{nombre_tabla}' en la base de datos '{ruta_db.name}'.\n ")
 
+    # ------- Se guarda el dataframe en SQLite ------- #
     guardar_en_sqlite(df_col_necesarias, name_tabla_general, rutadb)
 
-    # ------------------ Diccionario de mapeo Mes - numero mes ------------------
+    # ------- Se crea diccionario para relacionar el numero de mes con el nombre de mes. ------- #
     meses_es = {
         1: "enero", 2: "febrero", 3: "marzo", 4: "abril",
         5: "mayo", 6: "junio", 7: "julio", 8: "agosto",
@@ -375,16 +384,17 @@ def run_main(año_param, mes_param):
     }
     ### ---------- Colores de fondo para cada tarea en relacion con cada partner ---------- ###
     partner_fills = {
-        "ACIERTALA": PatternFill(start_color="D0D0F7", end_color="D0D0F7", fill_type="solid"),  # rojo claro
-        "CAMANBET": PatternFill(start_color="E2FECD", end_color="E2FECD", fill_type="solid"),      # azul claro
-        "DORADOBET CR": PatternFill(start_color="F8D3D3", end_color="F8D3D3", fill_type="solid"),     # verde claro#A8E6FA
-        "DORADOBET GT": PatternFill(start_color="F8D3D3", end_color="F8D3D3", fill_type="solid"),     # morado claro#EED247
-        "DORADOBET PE": PatternFill(start_color="F8D3D3", end_color="F8D3D3", fill_type="solid"),     # morado claro
-        "DORADOBET SV": PatternFill(start_color="F8D3D3", end_color="F8D3D3", fill_type="solid"),     # morado claro
-        "ECUABET": PatternFill(start_color="FFED8C", end_color="FFED8C", fill_type="solid"),     # morado claro
-        "GANAPLAY GT": PatternFill(start_color="C9C9C9", end_color="C9C9C9", fill_type="solid"),     # morado claro
-        "GANAPLAY SV": PatternFill(start_color="C9C9C9", end_color="C9C9C9", fill_type="solid"),     # morado claro
-        "PANIPLAY": PatternFill(start_color="ABFBFE", end_color="ABFBFE", fill_type="solid"),     # morado claro
+        "ACIERTALA": PatternFill(start_color="BEFFFF", end_color="BEFFFF", fill_type="solid"),  # rojo claro
+        "CAMANBET": PatternFill(start_color="EFE1E4", end_color="EFE1E4", fill_type="solid"),      # azul claro
+        "DORADOBET CR": PatternFill(start_color="F2F2F2", end_color="F2F2F2", fill_type="solid"),     # verde claro#A8E6FA
+        "DORADOBET GT": PatternFill(start_color="F2F2F2", end_color="F2F2F2", fill_type="solid"),     # morado claro#EED247
+        "DORADOBET PE": PatternFill(start_color="F2F2F2", end_color="F2F2F2", fill_type="solid"),     # morado claro
+        "DORADOBET SV": PatternFill(start_color="F2F2F2", end_color="F2F2F2", fill_type="solid"),     # morado claro
+        "DORADOBET EC": PatternFill(start_color="F2F2F2", end_color="F2F2F2", fill_type="solid"),     # morado claro
+        "ECUABET": PatternFill(start_color="FAFAD8", end_color="FAFAD8", fill_type="solid"),     # morado claro
+        "GANAPLAY GT": PatternFill(start_color="F4FFEA", end_color="F4FFEA", fill_type="solid"),     # morado claro
+        "GANAPLAY SV": PatternFill(start_color="F4FFEA", end_color="F4FFEA", fill_type="solid"),     # morado claro
+        "PANIPLAY": PatternFill(start_color="A096FF", end_color="A096FF", fill_type="solid"),     # morado claro
     }
 
 
